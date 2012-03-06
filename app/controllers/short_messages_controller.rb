@@ -1,4 +1,7 @@
 class ShortMessagesController < ApplicationController
+  def index
+  end
+  
   def new
     @short_message = ShortMessage.new
   end
