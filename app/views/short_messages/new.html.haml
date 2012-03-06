@@ -1,0 +1,9 @@
+.page-new-message
+
+  = flash.now[:error]
+  
+  = form_for @short_message, :url => { :action => "create" } do |f|
+    #short-content
+      %textarea= "在此输入短消息，不超过500字"
+      .field
+        %a.form-submit-button{:href=>'javascript:;'} 发送
