@@ -35,6 +35,10 @@ class ShortMessage < ActiveRecord::Base
           :conditions => ['(sender_hide = false and sender_id = ?) or (receiver_hide = false and receiver_id = ?)', user.id, user.id]
         )
       end
+      
+      def exchange_messages
+        
+      end
     end
   end
   

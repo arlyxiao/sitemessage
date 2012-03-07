@@ -8,10 +8,13 @@
 
 
 ActiveRecord::Base.connection.execute("TRUNCATE TABLE short_messages")
+
+require 'active_support/secure_random'
+20.times do |t|
+  random_string = ActiveSupport::SecureRandom.hex(16)
+  ShortMessage.create(:sender_id => rand(4), :receiver_id => rand(4), :content => random_string)
+end
+
 ShortMessage.update_all(:sender_hide => false)
 ShortMessage.update_all(:receiver_hide => false)
-20.times do |t|
-  ShortMessage.create(:sender_id => 1, :receiver_id => 2, :content => '')
-  ShortMessage.save
-end
 

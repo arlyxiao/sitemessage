@@ -21,10 +21,13 @@ class ShortMessagesController < ApplicationController
   
   # 与某个用户交流记录列表
   def exchange
-    if params[:receiver_id]
-      @short_message = ShortMessage.find_by_receiver_id(params[:receiver_id])
+    @short_message = ShortMessage.find_by_receiver_id(params[:receiver_id])
+    if @short_message
       @messages = current_user.exchange_messages_with(@short_message.receiver)
+    else
+      render :action => :index
     end
+    
   end
   
   def destroy

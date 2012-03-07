@@ -1,0 +1,18 @@
+%ul
+  -@messages.each do |m|
+    %li.message
+      .ct
+        :ruby
+          created_at = m.created_at.to_s
+          created_at = created_at[0, 10]
+          
+        -if current_user == m.receiver
+          .title="#{m.receiver.name},  #{m.content}, #{created_at}"
+        -elsif current_user == m.sender
+          .title="我,  #{m.content}, #{created_at}"
+        %p= link_to '删除', m, :confirm => '确认删除?', :method => :delete, :class => 'delete'
+        
+        
+
+          
+
