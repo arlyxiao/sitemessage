@@ -18,6 +18,13 @@ class ShortMessage < ActiveRecord::Base
     self.update_attribute(:receiver_hide, true)
   end
   
+  # 根据用户显示消息列表
+  def exchange_messages_by_user(user)
+		ShortMessage.find_by_sql("
+			select v.*, GREATEST(sender_id, receiver_id) as `max_user` , LEAST(sender_id, receiver_id) as `min_user` from (select * from short_messages order by id DESC) as v  where ((v.receiver_id = #{user.id} and v.receiver_hide = false ) or (v.sender_id = #{user.id} and v.sender_hide = false)) group by `max_user`,`min_user`  order by v.id DESC
+		")
+  end
+  
   # --- 给其他类扩展的方法
   module UserMethods
     def self.included(base)
@@ -34,6 +41,7 @@ class ShortMessage < ActiveRecord::Base
           :order => 'id DESC',
           :conditions => ['(sender_id = ? and sender_hide = false) or (receiver_id = ? and receiver_hide = false)', user.id, user.id]
         )
+        
       end
     end
   end

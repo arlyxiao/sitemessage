@@ -1,0 +1,19 @@
+%p = #{current_user.name}
+
+%ul
+  -@messages.each do |m|
+    %li.message
+      .ct
+        :ruby
+          created_at = m.created_at.to_s
+          created_at = created_at[0, 10]
+      -if m.receiver == current_user    
+        .title="#{m.sender.name}, #{m.content}, #{created_at}"
+        %p= link_to "查看", "/short_messages/exchange?receiver_id=#{m.sender.id}"
+      -elsif m.sender == current_user
+        .title="#{m.receiver.name}, #{m.content}, #{created_at}"
+        %p= link_to "查看", "/short_messages/exchange?receiver_id=#{m.receiver.id}"
+        
+
+          
+
