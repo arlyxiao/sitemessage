@@ -29,15 +29,11 @@ class ShortMessage < ActiveRecord::Base
     
     module InstanceMethods
       def exchange_messages_with(user)
-        ShortMessage.find(
+        data = ShortMessage.find(
           :all,
           :order => 'id DESC',
-          :conditions => ['(sender_hide = false and sender_id = ?) or (receiver_hide = false and receiver_id = ?)', user.id, user.id]
+          :conditions => ['(sender_id = ? and sender_hide = false) or (receiver_id = ? and receiver_hide = false)', user.id, user.id]
         )
-      end
-      
-      def exchange_messages
-        
       end
     end
   end
