@@ -54,6 +54,8 @@ class ShortMessage < ActiveRecord::Base
         )
         # 查询可以简化成这样，就不用find_by_sql了
         # TODO: 不过 SCOPE似乎也不太好用上，我继续考虑一下设计上的改进吧
+        # TODO: 发现这样写也有问题，发送给我的和我发送的，对于同一个人而言，有来有往时会查出重复的。
+        # 下午按我的新方案修改吧。
       end
       
       def exchanged_messages_with(user)
