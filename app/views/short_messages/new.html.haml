@@ -8,6 +8,11 @@
       #short-content
         %input{:name=>'short_message[receiver_id]', :type=>'hidden', :value=>@receiver.id}
         %textarea{:name=>'short_message[content]'}
+        
+        %input{:type=>'hidden', :size=>30, :value =>@receiver.id, :name=>'short_message[short_message_readings_attributes][][user_id]'}
+        %input{:type=>'hidden', :size=>30, :value =>current_user.id, :name=>'short_message[short_message_readings_attributes][][contact_user_id]'}
+        %input{:type=>'hidden', :size=>30, :value =>current_user.id, :name=>'short_message[short_message_readings_attributes][][user_id]'}
+        %input{:type=>'hidden', :size=>30, :value =>@receiver.id, :name=>'short_message[short_message_readings_attributes][][contact_user_id]'}
         .field
           %a.form-submit-button{:href=>'javascript:;'} 发送
   -else
