@@ -22,30 +22,6 @@ class ShortMessage < ActiveRecord::Base
     end
     
     module InstanceMethods
-      
-      # 显示指定用户的消息会话列表
-      # 定义在 user 上，语义性比较好
-      def all_exanged_last_messages
-    
-        ShortMessage.find(
-          :all,
-          :order => 'id DESC',
-          :group => 'sender_id, receiver_id',
-          :conditions => [
-            %~
-              (sender_id = ? AND sender_hide IS FALSE)
-              OR
-              (receiver_id = ? AND receiver_hide IS FALSE)
-            ~,
-            self.id, self.id
-          ]
-        )
-        # 查询可以简化成这样，就不用find_by_sql了
-        # TODO: 不过 SCOPE似乎也不太好用上，我继续考虑一下设计上的改进吧
-        # TODO: 发现这样写也有问题，发送给我的和我发送的，对于同一个人而言，有来有往时会查出重复的。
-        # 下午按我的新方案修改吧。
-      end
-      
       def exchanged_messages_with(user)
         ShortMessage.find(
           :all,
