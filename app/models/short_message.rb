@@ -52,7 +52,8 @@ class ShortMessage < ActiveRecord::Base
             self.id, self.id
           ]
         )
-        # 查询可以简化成这样，SCOPE似乎也不太好用上，我继续考虑一下设计上的改进吧
+        # 查询可以简化成这样，就不用find_by_sql了
+        # TODO: 不过 SCOPE似乎也不太好用上，我继续考虑一下设计上的改进吧
       end
       
       def exchanged_messages_with(user)
