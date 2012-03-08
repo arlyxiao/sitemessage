@@ -8,8 +8,7 @@ class ShortMessageReading < ActiveRecord::Base
   # --- 给其他类扩展的方法
   module UserMethods
     def self.included(base)
-      base.has_many :short_message_readings, :foreign_key => :receiver_id
-      
+      base.has_many :short_message_readings
       base.send(:include, InstanceMethods)
     end
     
