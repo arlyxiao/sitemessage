@@ -3,3 +3,7 @@ db/*.sqlite3
 log/*.log
 tmp/
 .sass-cache/
+vendor/bundle/*
+.project
+Gemfile.lock
+config/database.yml
