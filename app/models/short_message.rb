@@ -22,6 +22,7 @@ class ShortMessage < ActiveRecord::Base
     end
     
     module InstanceMethods
+=begin
       def exchanged_messages_with(user)
         ShortMessage.find(
           :all,
@@ -37,6 +38,7 @@ class ShortMessage < ActiveRecord::Base
           ]
         )
       end
+=end
     end
   end
   

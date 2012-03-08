@@ -34,8 +34,7 @@ class ShortMessagesController < ApplicationController
   
   def destroy
     @short_message = ShortMessage.find(params[:id]) if params[:id]
-    @short_message.hide_sender if current_user == @short_message.sender
-    @short_message.hide_receiver if current_user == @short_message.receiver
+    @short_message_reading.destroy
     
     return redirect_to "/short_messages/exchange?receiver_id=#{@short_message.receiver_id}"
   end

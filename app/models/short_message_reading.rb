@@ -14,11 +14,9 @@ class ShortMessageReading < ActiveRecord::Base
     
     module InstanceMethods
       def all_exchanged_last_messages
-				ShortMessageReading.find(
-					:all,
-					:group => 'contact_user_id',
-					:order => 'id DESC'
-				).map{|x| x.short_message}
+				ShortMessageReading.find_by_sql("
+					SELECT * FROM (SELECT * FROM short_message_readings ORDER BY id DESC) AS v WHERE v.user_id = #{self.id}  GROUP BY v.contact_user_id
+				").map{|x| x.short_message}
 			end
 		
 			def exchanged_messages_with(contact_user)
