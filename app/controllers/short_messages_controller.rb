@@ -33,8 +33,9 @@ class ShortMessagesController < ApplicationController
   end
   
   def destroy
-    @short_message = ShortMessage.find(params[:id]) if params[:id]
-    @short_message_reading.destroy
+    @short_message = ShortMessage.find(params[:id])
+    short_message_reading = ShortMessageReading.find_by_user_id_and_short_message_id(current_user.id, params[:id])
+    short_message_reading.destroy
     
     return redirect_to "/short_messages/exchange?receiver_id=#{@short_message.receiver_id}"
   end

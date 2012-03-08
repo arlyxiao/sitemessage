@@ -5,6 +5,8 @@ class ShortMessageReading < ActiveRecord::Base
   belongs_to :short_message
   
   
+  
+  
   # --- 给其他类扩展的方法
   module UserMethods
     def self.included(base)
