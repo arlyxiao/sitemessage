@@ -22,22 +22,6 @@ class ShortMessage < ActiveRecord::Base
     self.update_attribute(:receiver_hide, true)
   end
   
-  # 显示指定用户的消息会话列表
-  def exchange_messages_by_user(user)
-		ShortMessage.find_by_sql(
-      %~
-        SELECT v.*, GREATEST(sender_id, receiver_id) AS `max_user` , LEAST(sender_id, receiver_id) AS `min_user` 
-        FROM short_messages AS v 
-        WHERE (
-          (v.receiver_id = #{user.id} and v.receiver_hide = false ) 
-          OR 
-          (v.sender_id = #{user.id} and v.sender_hide = false)
-        ) 
-        GROUP BY `max_user`, `min_user`  ORDER BY v.id DESC
-      ~
-    )
-  end
-  
   # --- 给其他类扩展的方法
   module UserMethods
     def self.included(base)
@@ -50,6 +34,27 @@ class ShortMessage < ActiveRecord::Base
     end
     
     module InstanceMethods
+      
+      # 显示指定用户的消息会话列表
+      # 定义在 user 上，语义性比较好
+      def all_exanged_last_messages
+    
+        ShortMessage.find(
+          :all,
+          :order => 'id DESC',
+          :group => 'sender_id, receiver_id',
+          :conditions => [
+            %~
+              (sender_id = ? AND sender_hide IS FALSE)
+              OR
+              (receiver_id = ? AND receiver_hide IS FALSE)
+            ~,
+            self.id, self.id
+          ]
+        )
+        # 查询可以简化成这样，SCOPE似乎也不太好用上，我继续考虑一下设计上的改进吧
+      end
+      
       def exchanged_messages_with(user)
         ShortMessage.find(
           :all,
@@ -60,8 +65,8 @@ class ShortMessage < ActiveRecord::Base
               OR 
               (sender_id = ? AND receiver_id = ? AND receiver_hide IS FALSE)
             ~, 
-             self.id, user.id, # 由我发送的消息
-             user.id, self.id  # 由我接收的消息
+            self.id, user.id, # 由我发送的消息
+            user.id, self.id  # 由我接收的消息
           ]
         )
       end

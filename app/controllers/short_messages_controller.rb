@@ -1,7 +1,8 @@
 class ShortMessagesController < ApplicationController
   # 显示当前用户所有短消息记录列表
   def index
-    @messages = ShortMessage.new.exchange_messages_by_user(current_user)
+    @messages = current_user.all_exanged_last_messages
+    # 把方法定义改到user上了，这样语义上比较好，不用new对象
   end
   
   def new
