@@ -1,19 +1,31 @@
-%p = #{current_user.name}
-
-%ul
-  -@messages.each do |m|
+%ul.page-message-exchanged-users
+  -@messages.each do |message|
+    :ruby
+      created_at = message.created_at.localtime
+      content = message.content
+      
+      i_am_sender = current_user == message.sender
+      i_am_receiver = current_user == message.receiver
+      
+      if i_am_sender
+        another_user = message.receiver
+        klass = 'to' 
+      elsif i_am_receiver
+        another_user = message.sender
+        klass = 'from'
+      end
+      
+      exange_url = "/short_messages/exchange?receiver_id=#{another_user.id}"
+  
     %li.message
       .ct
-        :ruby
-          created_at = m.created_at.to_s
-          created_at = created_at[0, 10]
-      -if m.receiver == current_user    
-        .title="#{m.sender.name}, #{m.content}, #{created_at}"
-        %p= link_to "查看", "/short_messages/exchange?receiver_id=#{m.sender.id}"
-      -elsif m.sender == current_user
-        .title="#{m.receiver.name}, #{m.content}, #{created_at}"
-        %p= link_to "查看", "/short_messages/exchange?receiver_id=#{m.receiver.id}"
-        
-
+        -if i_am_sender
+          %span.user 发送给 #{message.receiver.name} :
+        -elsif i_am_receiver
+          %span.user 来自 #{message.sender.name} :
           
-
+        %span.text=content
+        %span.at (#{created_at})
+        
+      .ops
+        =link_to "查看", exange_url

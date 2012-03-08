@@ -1,10 +1,14 @@
 .page-new-message
-
-  = flash.now[:error]
-  
-  = form_for @short_message, :url => { :action => "create" } do |f|
-    #short-content
-      %input{:name => "short_message[receiver_id]", :type => "hidden", :value => "#{@receiver_id}"}/
-      %textarea{:name => "short_message[content]"}  在此输入短消息，不超过500字
-      .field
-        %a.form-submit-button{:href=>'javascript:;'} 发送
+  -if !@receiver.blank?
+    .send-to 发送短消息给 #{@receiver.name}
+      
+    = flash.now[:error]
+    
+    = form_for @short_message do |f|
+      #short-content
+        %input{:name=>'short_message[receiver_id]', :type=>'hidden', :value=>@receiver.id}
+        %textarea{:name=>'short_message[content]'}
+        .field
+          %a.form-submit-button{:href=>'javascript:;'} 发送
+  -else
+    .receiver-blank 没有指定收信者

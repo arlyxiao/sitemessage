@@ -1,17 +1,34 @@
-%ul
-  -@messages.each do |m|
-    %li.message
-      .ct
-        :ruby
-          created_at = m.created_at.to_s
-          created_at = created_at[0, 10]
-          
-        -if current_user == m.receiver
-          .title="#{m.receiver.name},  #{m.content}, #{created_at}"
-          %p= link_to '删除', m, :confirm => '确认删除?', :method => :delete, :class => 'delete'
-        -elsif current_user == m.sender
-          .title="我,  #{m.content}, #{created_at}"
-          %p= link_to '删除', m, :confirm => '确认删除?', :method => :delete, :class => 'delete'
+-htitle '会话信息'
+
+%ul.page-list-exchanged-messages
+  -if @exchanged_messages.blank?
+    .blank 还没有任何会话消息
+  -else
+    -@exchanged_messages.each do |message|
+      :ruby
+        created_at = message.created_at.localtime
+        content = message.content
+        
+        i_am_sender = current_user == message.sender
+        i_am_receiver = current_user == message.receiver
+        
+        klass = 'to' if i_am_sender
+        klass = 'from' if i_am_receiver
+        
+      %li.message{:class=>klass}
+        .ct
+          -if i_am_sender
+            %span.user 发送给 #{@receiver.name} :
+          -elsif i_am_receiver
+            %span.user 来自 #{@receiver.name} :
+            
+          %span.text=content
+          %span.at (#{created_at})
+        .ops
+          =link_to '删除消息', message, :confirm => '确认删除?', :method => :delete, :class => 'delete'
+        
+.page-back
+  =link_to '返回列表', '/short_messages'
         
         
 

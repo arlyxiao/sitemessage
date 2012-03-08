@@ -15,5 +15,11 @@
 .page-to-votes
   =link_to '去短消息列表','/short_messages'
 
+.page-users-list
+  -User.where(['id <> ?', current_user.id]).limit(10).each do |user|
+    .user
+      %span.name=user.name
+      %a.send-message{:href=>"/short_messages/new?receiver_id=#{user.id}"} 发短消息
+      
 .page-to-logout
   =link_to "退出登录","/logout"

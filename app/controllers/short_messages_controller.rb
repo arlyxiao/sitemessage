@@ -1,12 +1,13 @@
 class ShortMessagesController < ApplicationController
   # 显示当前用户所有短消息记录列表
   def index
-    @messages = ShortMessage.new.exchange_messages_by_user(current_user)
+    @messages = current_user.all_exanged_last_messages
+    # 把方法定义改到user上了，这样语义上比较好，不用new对象
   end
   
   def new
     @short_message = ShortMessage.new
-    @receiver_id = params[:receiver_id]
+    @receiver = User.find_by_id(params[:receiver_id])
   end
   
   def create
@@ -22,13 +23,14 @@ class ShortMessagesController < ApplicationController
   
   # 与某个用户交流记录列表
   def exchange
-    @short_message = ShortMessage.find_by_receiver_id(params[:receiver_id])
-    if @short_message
-      @messages = current_user.exchange_messages_with(@short_message.receiver)
-    else
-      render :action => :index
+    @receiver = User.find_by_id(params[:receiver_id])
+    
+    if !@receiver.blank?
+      @exchanged_messages = current_user.exchanged_messages_with(@receiver)
+      return
     end
     
+    render :text => '未指定用户'
   end
   
   def destroy
