@@ -5,8 +5,6 @@ class ShortMessageReading < ActiveRecord::Base
   belongs_to :short_message
   
   
-  
-  
   # --- 给其他类扩展的方法
   module UserMethods
     def self.included(base)
@@ -16,15 +14,19 @@ class ShortMessageReading < ActiveRecord::Base
     
     module InstanceMethods
       def all_exchanged_last_messages
-				ShortMessageReading.find_by_sql("
-					SELECT * FROM (SELECT * FROM short_message_readings ORDER BY id DESC) AS v WHERE v.user_id = #{self.id}  GROUP BY v.contact_user_id
-				").map{|x| x.short_message}
+				ShortMessageReading.find_by_sql(
+          %~
+  					SELECT * FROM (
+              SELECT * FROM short_message_readings WHERE user_id = #{self.id} ORDER BY id DESC
+            ) AS v GROUP BY v.contact_user_id
+  				~
+        ).map{|x| x.short_message}
 			end
 		
 			def exchanged_messages_with(contact_user)
 				ShortMessageReading.find(
 					:all,
-					:conditions => ['contact_user_id = ?', contact_user.id],
+					:conditions => ['contact_user_id = ? and user_id = ?', contact_user.id, self.id],
 					:order => 'id DESC'
 				).map{|x| x.short_message}
 			end
