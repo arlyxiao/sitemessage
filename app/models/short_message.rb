@@ -9,6 +9,12 @@ class ShortMessage < ActiveRecord::Base
   validates :sender, :receiver, :content, :presence => true
   validates_length_of :content, :maximum => 500, :message => "不能超过 %d 个字"
   
+  # 确保不能跟自己发送短消息
+  validate :validate_not_same_user
+  def validate_not_same_user
+    errors.add(:base, '不能自己跟自己发送短消息') if self.sender_id == self.receiver_id
+  end
+  
 
   # --- 给其他类扩展的方法
   module UserMethods
