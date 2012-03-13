@@ -12,7 +12,11 @@ class ShortMessagesController < ApplicationController
   def create
     @short_message = ShortMessage.new(params[:short_message])
     @short_message.sender = current_user
-    return redirect_to "/short_messages/exchange?receiver_id=#{@short_message.receiver_id}" if @short_message.save
+    #return redirect_to "/short_messages/exchange?receiver_id=#{@short_message.receiver_id}" if @short_message.save
+    if @short_message.save
+      Juggernaut.publish("/chats", @short_message.content)
+      return redirect_to "/short_messages/exchange?receiver_id=#{@short_message.receiver_id}"
+    end
 
     error = @short_message.errors.first
 	  flash.now[:error] = "#{error[0]} #{error[1]}"

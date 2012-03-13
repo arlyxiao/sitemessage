@@ -1,5 +1,20 @@
 -htitle '会话信息'
 
+%script{:charset => "utf-8", :src => "http://localhost:8080/application.js", :type => "text/javascript"}
+%script{:charset => "utf-8", :type => "text/javascript"}
+  var jug = new Juggernaut;
+  jug.subscribe("/chats", function(data){
+  var li = $("
+  %li>/
+  ");
+  li.text(data);
+  $("#chats").append(li);
+  });
+
+%p 即时信息
+%ul#chats
+
+
 %ul.page-list-exchanged-messages
   -if @exchanged_messages.blank?
     .blank 还没有任何会话消息

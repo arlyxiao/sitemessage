@@ -8,6 +8,8 @@ gem 'therubyracer'
 
 gem 'haml'
 
+gem 'juggernaut', :git => "git://github.com/maccman/juggernaut.git"
+
 group :assets do
   gem 'sass-rails',   '~> 3.1.4'
   gem 'coffee-rails', '~> 3.1.1'
