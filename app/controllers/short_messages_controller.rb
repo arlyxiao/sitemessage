@@ -14,7 +14,7 @@ class ShortMessagesController < ApplicationController
     @short_message.sender = current_user
     #return redirect_to "/short_messages/exchange?receiver_id=#{@short_message.receiver_id}" if @short_message.save
     if @short_message.save
-      Juggernaut.publish("/chats", @short_message.content)
+      Juggernaut.publish("/chats_#{@short_message.receiver_id}", @short_message.content)
       return redirect_to "/short_messages/exchange?receiver_id=#{@short_message.receiver_id}"
     end
 
