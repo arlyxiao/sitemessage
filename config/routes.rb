@@ -5,8 +5,6 @@ Sitemessage::Application.routes.draw do
     end
   end
   
-  resources :short_messages
-  
   # -- 用户登录认证相关 --
   root :to => 'index#index'
   get  '/login'  => 'sessions#new'
