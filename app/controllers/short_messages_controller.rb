@@ -48,11 +48,7 @@ class ShortMessagesController < ApplicationController
     short_message_reading = ShortMessageReading.find_by_user_id_and_short_message_id(current_user.id, params[:id])
     short_message_reading.destroy
     
-    if current_user == @short_message.sender
-      receiver_id = @short_message.receiver_id
-    else
-      receiver_id = @short_message.sender_id
-    end
+    receiver_id = (current_user == @short_message.sender)? @short_message.receiver_id: @short_message.sender_id
     
     return redirect_to "/short_messages/exchange?receiver_id=#{receiver_id}"
   end

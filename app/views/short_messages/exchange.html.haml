@@ -17,9 +17,8 @@
     $("ul li.message:first").before(message);
   }, 'json');
 
-%p 即时信息
-%ul#chats
-
+%p
+  %a{:href => "/short_messages/new?receiver_id=#{@receiver.id}"} 继续发送消息
 
 %ul.page-list-exchanged-messages
   -if @exchanged_messages.blank?
