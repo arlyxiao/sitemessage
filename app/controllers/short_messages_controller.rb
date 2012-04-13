@@ -14,7 +14,14 @@ class ShortMessagesController < ApplicationController
     @short_message.sender = current_user
     #return redirect_to "/short_messages/exchange?receiver_id=#{@short_message.receiver_id}" if @short_message.save
     if @short_message.save
-      Juggernaut.publish("/receiver#{@short_message.receiver_id}_sender#{current_user.id}", @short_message.content)
+      data = {
+        :id => @short_message.id,
+        :content => @short_message.content, 
+        :sender_name => @short_message.sender.name,
+        :time => @short_message.created_at
+      }
+      
+      Juggernaut.publish("/receiver#{@short_message.receiver_id}_sender#{current_user.id}", data.to_json)
       return redirect_to "/short_messages/exchange?receiver_id=#{@short_message.receiver_id}"
     end
 
@@ -41,7 +48,13 @@ class ShortMessagesController < ApplicationController
     short_message_reading = ShortMessageReading.find_by_user_id_and_short_message_id(current_user.id, params[:id])
     short_message_reading.destroy
     
-    return redirect_to "/short_messages/exchange?receiver_id=#{@short_message.receiver_id}"
+    if current_user == @short_message.sender
+      receiver_id = @short_message.receiver_id
+    else
+      receiver_id = @short_message.sender_id
+    end
+    
+    return redirect_to "/short_messages/exchange?receiver_id=#{receiver_id}"
   end
 
 end
